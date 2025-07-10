@@ -70,11 +70,35 @@ Then open [http://localhost:3000](http://localhost:3000) to view it in your brow
 
 ---
 
-## 🧠 Contributions
+Absolutely! Here's an updated **🧠 Contributions** section for your README that includes **all three team members** and clearly outlines their work for Phase-1:
 
-### 👨‍💻 Avnish Kumar Sinha – Expense Input Form
-- Developed the form for entering expenses (amount, category, description, date)
-- Added validation, mock submit logic (logs to console), and responsive styling
+---
+
+### 🧠 Contributions
+
+#### 👨‍💻 Avnish Kumar Sinha – Expense Input Form
+
+* Developed the **Expense Input Form** component using React
+* Managed form inputs using `useState` (amount, category, description, date)
+* Handled form submission and validation
+* Logged expense data as mock output to the console
+* Designed a clean, responsive layout for the form using custom CSS
+
+#### 🧑‍💻 Luke Bowen – Category Manager System
+
+* Created the **Category Selector & Manager** UI component
+* Implemented predefined category dropdown (Food, Travel, Entertainment, etc.)
+* Added support for custom category input using local state
+* Ensured category updates dynamically in the interface
+* Styled the dropdown and input field for usability
+
+#### 👩‍💻 Sage Tesoro – Expense Display View
+
+* Designed the **Expense List Display** using mock JSON data
+* Developed a card/list view to show expenses with fields (amount, date, category, description)
+* Added UI buttons for Edit/Delete (non-functional in Phase-1)
+* Implemented filtering by category using dropdown
+* Applied consistent styling for expense items and layout
 
 ---
 
