@@ -1,5 +1,6 @@
 import React from 'react';
 import ExpenseForm from './expenseForm';
+import {ExpenseList} from './expenseCard';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       
       <h1>Expense Tracker - Phase 1</h1>
       <ExpenseForm />
+      <ExpenseList />
     </div>
   );
 }

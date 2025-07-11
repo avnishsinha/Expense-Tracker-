@@ -1,0 +1,48 @@
+.expenseCard {
+    max-width: 400px;
+    display: flex;
+    margin: 1rem auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    justify-content: space-between;
+  }
+  
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.top {
+  margin-top: 0.3rem;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+p {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  font-weight: 600;
+}

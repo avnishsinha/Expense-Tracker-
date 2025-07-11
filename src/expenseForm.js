@@ -56,6 +56,7 @@ const ExpenseForm = () => {
             <option value="Travel">Travel</option>
             <option value="Entertainment">Entertainment</option>
             <option value="Groceries">Groceries</option>
+            <option value="Deposit">Deposit</option>
           </select>
         </div>
 
