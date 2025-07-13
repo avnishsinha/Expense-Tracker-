@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './expenseCard.css';
 
 function ExpenseCard({ amount, category, description, date }) {
+
   return (
     <div className="expenseCard">
       <div className="left">
@@ -13,10 +14,15 @@ function ExpenseCard({ amount, category, description, date }) {
         <p>{description}</p>
       </div>
       <div className="right">
-        <p>${amount}</p>
+        <p style={{ 
+          color: category === 'Deposit' 
+          ? '#28a745' 
+          : '#e50000' }}>
+          ${amount}
+        </p>
         <div className="bottom">
-          <button>Edit</button>
-          <button>Delete</button>
+          <button id="edit">Edit</button>
+          <button id="delete">Delete</button>
         </div>
       </div>
     </div>
@@ -36,15 +42,17 @@ function ExpenseList() {
   return (
     <div>
       <div className="filter">
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={selectedCategory === cat ? 'active' : ''}
-          >
-            {cat}
-          </button>
-        ))}
+        <select className="categories"
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          {categories.map(cat => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+        
       </div>
 
       <dl>
