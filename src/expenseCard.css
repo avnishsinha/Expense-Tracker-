@@ -1,0 +1,92 @@
+.expenseCard {
+    max-width: 400px;
+    display: flex;
+    margin: 1rem auto;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #fff;
+    justify-content: space-between;
+  }
+  
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.top {
+  margin-top: 0.3rem;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+p {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  font-weight: 600;
+}
+
+#edit {
+  background-color: #28a745;
+  color: white;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+#edit:hover {
+  background-color: #218838;
+}
+
+#delete {
+  background-color: #e50000;
+  color: white;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+#delete:hover {
+  background-color: #990000;
+}
+
+.filter{
+  justify-content: center;
+  display: flex;
+  margin: 1rem;
+}
+.categories {
+  width: 35%;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  justify-content: center;
+  display: flex;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
