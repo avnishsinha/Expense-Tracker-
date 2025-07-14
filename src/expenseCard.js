@@ -31,16 +31,24 @@ function ExpenseCard({ amount, category, description, date }) {
 
 function ExpenseList() {
   const [selectedCategory, setSelectedCategory] = useState('All');
-
   const categories = ['All', ...new Set(TestData.map(item => item.category))];
 
   const filteredData =
     selectedCategory === 'All'
       ? TestData
       : TestData.filter(item => item.category === selectedCategory);
-
+  const balance = TestData.reduce((sum, item) => {
+  return item.category === 'Deposit'
+    ? sum + parseFloat(item.amount)
+    : sum - parseFloat(item.amount);
+  }, 0);
   return (
-    <div>
+    <div className="body">
+      <div className="currentBal">
+        <p>Current Balance: </p>
+        <p>${balance}</p>
+
+      </div>
       <div className="filter">
         <select className="categories"
         value={selectedCategory}
