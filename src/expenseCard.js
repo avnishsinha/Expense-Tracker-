@@ -47,7 +47,9 @@ function ExpenseList() {
       <div className="currentBal">
         <p>Current Balance: </p>
         <p>${balance}</p>
-
+      </div>
+      <div>
+        <p className="history">Expense History:</p>
       </div>
       <div className="filter">
         <select className="categories"

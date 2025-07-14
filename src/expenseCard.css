@@ -110,7 +110,12 @@ p {
 .currentBal p {
   padding: 0.7rem;
   border: none;
-  font-size: 1rem;
+  font-size: 1.5rem;
   text-align: center;
-  
+}
+
+.history {
+  text-decoration: underline;
+  padding: 0.7rem;
+  font-size: 1.25rem;
 }
