@@ -1,5 +1,16 @@
 .body{
   display: flex;
+  align-items: start;
+  justify-content: space-evenly;
+}
+.leftExpenseList{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rightExpenseList{
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -102,7 +113,6 @@ p {
   display: flex;
   margin: 1rem;
   background-color: #fff;
-  width: 20%;
   border-radius: 8px;
   align-items: center;
 
@@ -118,4 +128,23 @@ p {
   text-decoration: underline;
   padding: 0.7rem;
   font-size: 1.25rem;
+}
+
+.month {
+    max-width: 400px;
+    display: flex;
+    margin: 1rem auto;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #fff;
+    justify-content: space-between;
+  }
+
+#prevMonth, #nextMonth {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  border: 0;
+  background-color: #fff;
+  cursor: pointer;
 }

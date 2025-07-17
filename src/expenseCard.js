@@ -2,11 +2,8 @@ import TestData from './testData';
 import { useState } from 'react';
 import './expenseCard.css';
 
+// One expense card
 function ExpenseCard({ amount, category, description, date }) {
-  // html for each expense card
-  // date                    amount of money
-  // description             buttons
-  // note: color of amount changes if it is deposited or withdrawing
   return (
     <div className="expenseCard">
       <div className="left">
@@ -32,104 +29,103 @@ function ExpenseCard({ amount, category, description, date }) {
   );
 }
 
-// list of expenses
+// List of all expenses
 function ExpenseList() {
-  // selected category for filters
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const categories = ['All', ...new Set(TestData.map(item => item.category))];
 
-  // filter category
-  const filteredData =
-  // if all categories selected
-    selectedCategory === 'All'
-    // give all data
-      ? TestData
-    // else, give selected category
-      : TestData.filter(item => item.category === selectedCategory);
-
-  // month category
+  // Months list
   const currentDate = new Date();
-  // find prev 12 months
   const prevMonths = ['All'];
   for (let i = 0; i < 36; i++) {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i);
     const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
     prevMonths.push(monthYear);
   }
-  
-    // React state
-    const [months] = useState(prevMonths); // freeze the list
-    const [currentMonthIndex, setCurrentMonthIndex] = useState(0); // 0 = "All"
-    const selectedMonth = months[currentMonthIndex];
-  // logic to go to prev month
+
+  const [months] = useState(prevMonths);
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
+  const selectedMonth = months[currentMonthIndex];
+
+  // Navigate months
   const goToPrevMonth = () => {
-  if (currentMonthIndex < months.length - 1) {
-    setCurrentMonthIndex(currentMonthIndex + 1);
-  }
-};
-// logic to go to next month
-const goToNextMonth = () => {
-  if (currentMonthIndex > 0) {
-    setCurrentMonthIndex(currentMonthIndex - 1);
-  }
-};
-  // balance math
-  const balance = TestData.reduce((sum, item) => {
-  // if deposited
-  return item.category === 'Deposit'
-  // add amount
-    ? sum + parseFloat(item.amount)
-  // else, remove
-    : sum - parseFloat(item.amount);
+    if (currentMonthIndex < months.length - 1) {
+      setCurrentMonthIndex(currentMonthIndex + 1);
+    }
+  };
+  const goToNextMonth = () => {
+    if (currentMonthIndex > 0) {
+      setCurrentMonthIndex(currentMonthIndex - 1);
+    }
+  };
+
+  // Filter data by selected category and month
+  const filteredData = TestData.filter(item => {
+    const itemDate = new Date(item.date);
+    const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    const matchesMonth = selectedMonth === 'All' || itemMonthYear === selectedMonth;
+    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+
+    return matchesMonth && matchesCategory;
+  });
+
+  // Dynamic categories from current filtered data
+  const categories = ['All', ...new Set(TestData.map(item => item.category))];
+
+  // Calculate balance based on full TestData (not filtered)
+  const balance = filteredData.reduce((sum, item) => {
+    return item.category === 'Deposit'
+      ? sum + parseFloat(item.amount)
+      : sum - parseFloat(item.amount);
   }, 0);
+
+
   return (
-    
-// month           balance
-// pie chart?      expense history
     <div className="body">
       <div className="leftExpenseList">
-        <div className = "month">
+        <div className="month">
           <button id="prevMonth" onClick={goToPrevMonth} disabled={currentMonthIndex >= months.length - 1}>&lt;</button>
           <p>{selectedMonth}</p>
           <button id="nextMonth" onClick={goToNextMonth} disabled={currentMonthIndex <= 0}>&gt;</button>
         </div>
       </div>
-      <div className="RightExpenseList">
-        
-      </div>
-      <div className="currentBal">
-        <p>Current Balance: </p>
-        <p>${balance}</p>
-      </div>
-      <div className="filter">
-        <select className="categories"
-        value={selectedCategory}
-        
-        onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map(cat => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-        
-      </div>
 
-      <dl>
-        {filteredData.map(({ id, amount, category, date, description }) => (
-          <ExpenseCard
-            key={id}
-            amount={amount}
-            category={category}
-            date={date}
-            description={description}
-          />
-        ))}
-      </dl>
+      <div className="rightExpenseList">
+        <div className="currentBal">
+          <p>{selectedMonth === 'All' ? 'Overall' : selectedMonth} Balance:</p>
+          <p>${balance.toFixed(2)}</p>
+        </div>
+
+        <div className="filter">
+          <select
+            className="categories"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            {categories.map(cat => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <dl>
+          {filteredData.map(({ id, amount, category, date, description }) => (
+            <ExpenseCard
+              key={id}
+              amount={amount}
+              category={category}
+              date={date}
+              description={description}
+            />
+          ))}
+        </dl>
+      </div>
     </div>
   );
 }
+
 
 export default ExpenseCard;
 export { ExpenseList };
