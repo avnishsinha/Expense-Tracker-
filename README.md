@@ -70,10 +70,6 @@ Then open [http://localhost:3000](http://localhost:3000) to view it in your brow
 
 ---
 
-Absolutely! Here's an updated **🧠 Contributions** section for your README that includes **all three team members** and clearly outlines their work for Phase-1:
-
----
-
 ### 🧠 Contributions
 
 #### 👨‍💻 Avnish Kumar Sinha – Expense Input Form

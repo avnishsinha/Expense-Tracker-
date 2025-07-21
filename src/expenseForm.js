@@ -4,13 +4,16 @@ import './App.css';
 const ExpenseForm = () => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
+  const [customCategory, setCustomCategory] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!amount || !category || !date) {
+    const finalCategory = category === 'Custom' ? customCategory : category;
+
+    if (!amount || !finalCategory || !date) {
       alert("Please fill out Amount, Category, and Date.");
       return;
     }
@@ -26,6 +29,7 @@ const ExpenseForm = () => {
 
     setAmount('');
     setCategory('');
+    setCustomCategory('');
     setDescription('');
     setDate('');
   };
@@ -33,7 +37,7 @@ const ExpenseForm = () => {
   return (
     <div className="form-wrapper">
       <form className="expense-form" onSubmit={handleSubmit}>
-        <h2 className="form-title">➕ Add New Expense</h2>
+        <h2 className="form-title">Add New Expense:</h2>
 
         <div className="form-group">
           <label>💰 Amount ($)</label>
@@ -57,8 +61,21 @@ const ExpenseForm = () => {
             <option value="Entertainment">Entertainment</option>
             <option value="Groceries">Groceries</option>
             <option value="Deposit">Deposit</option>
+            <option value="Custom">Custom...</option>
           </select>
         </div>
+
+        {category === 'Custom' && (
+          <div className="form-group">
+            <label>Enter Custom Category</label>
+            <input
+              type="text"
+              value={customCategory}
+              onChange={(e) => setCustomCategory(e.target.value)}
+              placeholder="e.g. Vet, Fitness, Books"
+            />
+          </div>
+        )}
 
         <div className="form-group">
           <label>📝 Description</label>

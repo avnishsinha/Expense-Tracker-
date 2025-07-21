@@ -2,13 +2,13 @@ import TestData from './testData';
 import { useState } from 'react';
 import './expenseCard.css';
 
+// One expense card
 function ExpenseCard({ amount, category, description, date }) {
-
   return (
     <div className="expenseCard">
       <div className="left">
         <div className="top">
-          <p>{new Date(date).toLocaleDateString()}</p>
+          <p>{new Date(date).toLocaleDateString()}</p> 
           <p>{category}</p>
         </div>
         <p>{description}</p>
@@ -29,46 +29,103 @@ function ExpenseCard({ amount, category, description, date }) {
   );
 }
 
+// List of all expenses
 function ExpenseList() {
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  // Months list
+  const currentDate = new Date();
+  const prevMonths = ['All'];
+  for (let i = 0; i < 36; i++) {
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i);
+    const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    prevMonths.push(monthYear);
+  }
+
+  const [months] = useState(prevMonths);
+  const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
+  const selectedMonth = months[currentMonthIndex];
+
+  // Navigate months
+  const goToPrevMonth = () => {
+    if (currentMonthIndex < months.length - 1) {
+      setCurrentMonthIndex(currentMonthIndex + 1);
+    }
+  };
+  const goToNextMonth = () => {
+    if (currentMonthIndex > 0) {
+      setCurrentMonthIndex(currentMonthIndex - 1);
+    }
+  };
+
+  // Filter data by selected category and month
+  const filteredData = TestData.filter(item => {
+    const itemDate = new Date(item.date);
+    const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+
+    const matchesMonth = selectedMonth === 'All' || itemMonthYear === selectedMonth;
+    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+
+    return matchesMonth && matchesCategory;
+  });
+
+  // Dynamic categories from current filtered data
   const categories = ['All', ...new Set(TestData.map(item => item.category))];
 
-  const filteredData =
-    selectedCategory === 'All'
-      ? TestData
-      : TestData.filter(item => item.category === selectedCategory);
+  // Calculate balance based on full TestData (not filtered)
+  const balance = filteredData.reduce((sum, item) => {
+    return item.category === 'Deposit'
+      ? sum + parseFloat(item.amount)
+      : sum - parseFloat(item.amount);
+  }, 0);
+
 
   return (
-    <div>
-      <div className="filter">
-        <select className="categories"
-        value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map(cat => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-        
+    <div className="body">
+      <div className="leftExpenseList">
+        <div className="month">
+          <button id="prevMonth" onClick={goToPrevMonth} disabled={currentMonthIndex >= months.length - 1}>&lt;</button>
+          <p>{selectedMonth}</p>
+          <button id="nextMonth" onClick={goToNextMonth} disabled={currentMonthIndex <= 0}>&gt;</button>
+        </div>
       </div>
 
-      <dl>
-        {filteredData.map(({ id, amount, category, date, description }) => (
-          <ExpenseCard
-            key={id}
-            amount={amount}
-            category={category}
-            date={date}
-            description={description}
-          />
-        ))}
-      </dl>
+      <div className="rightExpenseList">
+        <div className="currentBal">
+          <p>{selectedMonth === 'All' ? 'Overall' : selectedMonth} Balance:</p>
+          <p>${balance.toFixed(2)}</p>
+        </div>
+
+        <div className="filter">
+          <select
+            className="categories"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            {categories.map(cat => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <dl>
+          {filteredData.map(({ id, amount, category, date, description }) => (
+            <ExpenseCard
+              key={id}
+              amount={amount}
+              category={category}
+              date={date}
+              description={description}
+            />
+          ))}
+        </dl>
+      </div>
     </div>
   );
 }
+
 
 export default ExpenseCard;
 export { ExpenseList };

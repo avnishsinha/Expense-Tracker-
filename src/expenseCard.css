@@ -1,3 +1,20 @@
+.body{
+  display: flex;
+  align-items: start;
+  justify-content: space-evenly;
+}
+.leftExpenseList{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rightExpenseList{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .expenseCard {
     max-width: 400px;
     display: flex;
@@ -80,7 +97,7 @@ p {
   margin: 1rem;
 }
 .categories {
-  width: 35%;
+  width:100%;
   padding: 0.7rem;
   border: none;
   border-radius: 8px;
@@ -89,4 +106,45 @@ p {
   display: flex;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   text-align: center;
+}
+
+.currentBal{
+  justify-content: center;
+  display: flex;
+  margin: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  align-items: center;
+
+}
+.currentBal p {
+  padding: 0.7rem;
+  border: none;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.history {
+  text-decoration: underline;
+  padding: 0.7rem;
+  font-size: 1.25rem;
+}
+
+.month {
+    max-width: 400px;
+    display: flex;
+    margin: 1rem auto;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #fff;
+    justify-content: space-between;
+  }
+
+#prevMonth, #nextMonth {
+  margin-left: 1rem;
+  margin-right: 1rem;
+  border: 0;
+  background-color: #fff;
+  cursor: pointer;
 }
