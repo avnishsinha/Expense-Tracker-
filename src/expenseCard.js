@@ -1,4 +1,4 @@
-import TestData from './testData';
+//import TestData from './testData';
 import { useState } from 'react';
 import './expenseCard.css';
 import SpendingPieChart from './PieChart';
@@ -31,8 +31,8 @@ function ExpenseCard({ amount, category, description, date }) {
 }
 
 // List of all expenses
-function ExpenseList() {
-  const [expenses, setExpenses] = useState(TestData);
+function ExpenseList({ initialExpenses  }) {
+  const expenses = initialExpenses;
   const [selectedCategory, setSelectedCategory] = useState('All');
   // catergory data
     const categoryData = expenses.reduce((acc, expense) => {
@@ -72,7 +72,7 @@ function ExpenseList() {
   };
 
   // Filter data by selected category and month
-  const filteredData = TestData.filter(item => {
+  const filteredData = expenses.filter(item => {
     const itemDate = new Date(item.date);
     const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
@@ -83,9 +83,9 @@ function ExpenseList() {
   });
 
   // Dynamic categories from current filtered data
-  const categories = ['All', ...new Set(TestData.map(item => item.category))];
+  const categories = ['All', ...new Set(expenses.map(item => item.category))];
 
-  // Calculate balance based on full TestData (not filtered)
+  // Calculate balance based on full expenses (not filtered)
   const balance = filteredData.reduce((sum, item) => {
     return item.category === 'Deposit'
       ? sum + parseFloat(item.amount)

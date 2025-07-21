@@ -5,7 +5,7 @@ const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#a4de6c', '#d0ed57'
 
 const SpendingPieChart = ({ data }) => {
   return (
-    <div style={{ width: '100%', height: 300 , marginBottom: '50px'}}>
+    <div style={{ width: '100%', height: 300 , margin: '50px'}}>
       <h3 style={{ textAlign: 'center' }}>📊 Spending by Category</h3>
       <ResponsiveContainer>
         <PieChart>

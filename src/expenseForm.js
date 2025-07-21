@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 
-const ExpenseForm = () => {
+const ExpenseForm = ({ onSubmitExpense }) => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [customCategory, setCustomCategory] = useState('');
@@ -26,7 +26,7 @@ const ExpenseForm = () => {
     };
 
     console.log("Expense Submitted:", expenseData);
-
+    onSubmitExpense(expenseData);
     setAmount('');
     setCategory('');
     setCustomCategory('');
