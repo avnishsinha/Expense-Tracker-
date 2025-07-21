@@ -24,13 +24,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Expense Tracker - Phase 1</h1>
+      <h1>Expense Tracker - Phase 2</h1>
       <ExpenseForm onSubmitExpense={handleAddExpense} />
-      {categoryData.length > 0 ? (
-        <SpendingPieChart data={categoryData} />
-      ) : (
-        <p style={{ textAlign: 'center' }}>No expense data to display yet.</p>
-      )}
       <ExpenseList expenses={expenses} />
     </div>
   );

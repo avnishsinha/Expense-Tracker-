@@ -1,6 +1,7 @@
 import TestData from './testData';
 import { useState } from 'react';
 import './expenseCard.css';
+import SpendingPieChart from './PieChart';
 
 // One expense card
 function ExpenseCard({ amount, category, description, date }) {
@@ -31,7 +32,19 @@ function ExpenseCard({ amount, category, description, date }) {
 
 // List of all expenses
 function ExpenseList() {
+  const [expenses, setExpenses] = useState(TestData);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  // catergory data
+    const categoryData = expenses.reduce((acc, expense) => {
+    const category = expense.category;
+    const existing = acc.find(item => item.category === category);
+    if (existing) {
+      existing.amount += parseFloat(expense.amount);
+    } else {
+      acc.push({ category, amount: parseFloat(expense.amount) });
+    }
+    return acc;
+  }, []);
 
   // Months list
   const currentDate = new Date();
@@ -87,6 +100,13 @@ function ExpenseList() {
           <button id="prevMonth" onClick={goToPrevMonth} disabled={currentMonthIndex >= months.length - 1}>&lt;</button>
           <p>{selectedMonth}</p>
           <button id="nextMonth" onClick={goToNextMonth} disabled={currentMonthIndex <= 0}>&gt;</button>
+        </div>
+        <div className ="piechart">
+                {categoryData.length > 0 ? (
+                  <SpendingPieChart data={categoryData} />
+                ) : (
+                  <p style={{ textAlign: 'center' }}>No expense data to display yet.</p>
+                )}
         </div>
       </div>
 
