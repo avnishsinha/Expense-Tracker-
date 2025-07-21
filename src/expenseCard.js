@@ -5,11 +5,16 @@ import SpendingPieChart from './PieChart';
 
 // One expense card
 function ExpenseCard({ amount, category, description, date }) {
+  console.log("ExpenseCard date:", date);
   return (
     <div className="expenseCard">
       <div className="left">
         <div className="top">
-          <p>{new Date(date).toLocaleDateString()}</p> 
+          <p>{new Date(date).toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        })}</p>
           <p>{category}</p>
         </div>
         <p>{description}</p>
@@ -33,6 +38,7 @@ function ExpenseCard({ amount, category, description, date }) {
 // List of all expenses
 function ExpenseList({ initialExpenses  }) {
   const expenses = initialExpenses;
+  
   const [selectedCategory, setSelectedCategory] = useState('All');
   // catergory data
     const categoryData = expenses.reduce((acc, expense) => {
@@ -73,13 +79,13 @@ function ExpenseList({ initialExpenses  }) {
 
   // Filter data by selected category and month
   const filteredData = expenses.filter(item => {
-    const itemDate = new Date(item.date);
-    const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+    const itemDate = new Date(item.date_created); // ← Fix this
+  const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
-    const matchesMonth = selectedMonth === 'All' || itemMonthYear === selectedMonth;
-    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+  const matchesMonth = selectedMonth === 'All' || itemMonthYear === selectedMonth;
+  const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
 
-    return matchesMonth && matchesCategory;
+  return matchesMonth && matchesCategory;
   });
 
   // Dynamic categories from current filtered data
@@ -131,12 +137,12 @@ function ExpenseList({ initialExpenses  }) {
         </div>
 
         <dl>
-          {filteredData.map(({ id, amount, category, date, description }) => (
+          {filteredData.map(({ id, amount, category, date_created, description }) => (
             <ExpenseCard
               key={id}
               amount={amount}
               category={category}
-              date={date}
+              date={date_created}
               description={description}
             />
           ))}
