@@ -1,33 +1,37 @@
-//import TestData from './testData';
 import { useState } from 'react';
 import './expenseCard.css';
 import SpendingPieChart from './PieChart';
 
-// One expense card
-function ExpenseCard({ amount, category, description, date }) {
-  console.log("ExpenseCard date:", date);
+// Single expense card component
+function ExpenseCard({ id, amount, category, description, date, onEdit }) {
   return (
     <div className="expenseCard">
       <div className="left">
         <div className="top">
-          <p>{new Date(date).toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric'
-        })}</p>
+          <p>
+            {date ? new Date(date).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            }) : 'No Date'}
+          </p>
           <p>{category}</p>
         </div>
         <p>{description}</p>
       </div>
       <div className="right">
-        <p style={{ 
-          color: category === 'Deposit' 
-          ? '#28a745' 
-          : '#e50000' }}>
+        <p style={{ color: category === 'Deposit' ? '#28a745' : '#e50000' }}>
           ${amount}
         </p>
         <div className="bottom">
-          <button id="edit">Edit</button>
+          <button
+            id="edit"
+            onClick={() => {
+              onEdit();
+            }}
+          >
+            Edit
+          </button>
           <button id="delete">Delete</button>
         </div>
       </div>
@@ -35,13 +39,12 @@ function ExpenseCard({ amount, category, description, date }) {
   );
 }
 
-// List of all expenses
-function ExpenseList({ initialExpenses  }) {
+// List of all expenses with filtering and pie chart
+function ExpenseList({ initialExpenses, setEditingId }) {
   const expenses = initialExpenses;
-  
   const [selectedCategory, setSelectedCategory] = useState('All');
-  // catergory data
-    const categoryData = expenses.reduce((acc, expense) => {
+
+  const categoryData = expenses.reduce((acc, expense) => {
     const category = expense.category;
     const existing = acc.find(item => item.category === category);
     if (existing) {
@@ -52,7 +55,6 @@ function ExpenseList({ initialExpenses  }) {
     return acc;
   }, []);
 
-  // Months list
   const currentDate = new Date();
   const prevMonths = ['All'];
   for (let i = 0; i < 36; i++) {
@@ -65,7 +67,6 @@ function ExpenseList({ initialExpenses  }) {
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
   const selectedMonth = months[currentMonthIndex];
 
-  // Navigate months
   const goToPrevMonth = () => {
     if (currentMonthIndex < months.length - 1) {
       setCurrentMonthIndex(currentMonthIndex + 1);
@@ -77,27 +78,26 @@ function ExpenseList({ initialExpenses  }) {
     }
   };
 
-  // Filter data by selected category and month
   const filteredData = expenses.filter(item => {
-    const itemDate = new Date(item.date_created); // ← Fix this
-  const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+    const itemDate = new Date(item.date_created);
+    const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
-  const matchesMonth = selectedMonth === 'All' || itemMonthYear === selectedMonth;
-  const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+    const matchesMonth = selectedMonth === 'All' || itemMonthYear === selectedMonth;
+    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
 
-  return matchesMonth && matchesCategory;
+    return matchesMonth && matchesCategory;
   });
 
-  // Dynamic categories from current filtered data
+  // Log filtered data here (outside JSX)
+  console.log('Filtered Data:', filteredData);
+
   const categories = ['All', ...new Set(expenses.map(item => item.category))];
 
-  // Calculate balance based on full expenses (not filtered)
   const balance = filteredData.reduce((sum, item) => {
     return item.category === 'Deposit'
       ? sum + parseFloat(item.amount)
       : sum - parseFloat(item.amount);
   }, 0);
-
 
   return (
     <div className="body">
@@ -107,12 +107,12 @@ function ExpenseList({ initialExpenses  }) {
           <p>{selectedMonth}</p>
           <button id="nextMonth" onClick={goToNextMonth} disabled={currentMonthIndex <= 0}>&gt;</button>
         </div>
-        <div className ="piechart">
-                {categoryData.length > 0 ? (
-                  <SpendingPieChart data={categoryData} />
-                ) : (
-                  <p style={{ textAlign: 'center' }}>No expense data to display yet.</p>
-                )}
+        <div className="piechart">
+          {categoryData.length > 0 ? (
+            <SpendingPieChart data={categoryData} />
+          ) : (
+            <p style={{ textAlign: 'center' }}>No expense data to display yet.</p>
+          )}
         </div>
       </div>
 
@@ -137,13 +137,15 @@ function ExpenseList({ initialExpenses  }) {
         </div>
 
         <dl>
-          {filteredData.map(({ id, amount, category, date_created, description }) => (
+          {filteredData.map(({ expenseid, amount, category, date_created, date, description }) => (
             <ExpenseCard
-              key={id}
+              key={expenseid}              // React key prop
+              id={expenseid}               // pass correct id to ExpenseCard
               amount={amount}
               category={category}
-              date={date_created}
               description={description}
+              date={date_created || date}
+              onEdit={() => setEditingId(expenseid)}  // callback with correct id
             />
           ))}
         </dl>
@@ -151,7 +153,6 @@ function ExpenseList({ initialExpenses  }) {
     </div>
   );
 }
-
 
 export default ExpenseCard;
 export { ExpenseList };
