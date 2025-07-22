@@ -3,7 +3,7 @@ import './expenseCard.css';
 import SpendingPieChart from './PieChart';
 
 // Single expense card component
-function ExpenseCard({ id, amount, category, description, date, onEdit }) {
+function ExpenseCard({ id, amount, category, description, date, onEdit, onDelete }) {
   return (
     <div className="expenseCard">
       <div className="left">
@@ -32,7 +32,9 @@ function ExpenseCard({ id, amount, category, description, date, onEdit }) {
           >
             Edit
           </button>
-          <button id="delete">Delete</button>
+          <button id="delete" onClick={() => {
+              onDelete();
+            }}>Delete</button>
         </div>
       </div>
     </div>
@@ -40,7 +42,7 @@ function ExpenseCard({ id, amount, category, description, date, onEdit }) {
 }
 
 // List of all expenses with filtering and pie chart
-function ExpenseList({ initialExpenses, setEditingId }) {
+function ExpenseList({ initialExpenses, setEditingId, onDelete  }) {
   const expenses = initialExpenses;
   const [selectedCategory, setSelectedCategory] = useState('All');
 
@@ -146,6 +148,7 @@ function ExpenseList({ initialExpenses, setEditingId }) {
               description={description}
               date={date_created || date}
               onEdit={() => setEditingId(expenseid)}  // callback with correct id
+              onDelete={() => onDelete(expenseid)} // callback with correct id
             />
           ))}
         </dl>

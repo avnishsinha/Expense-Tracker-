@@ -53,6 +53,33 @@ function App() {
     }
   };
 
+  async function handleDeleteClick(expenseid) {
+  try {
+    const confirmed = window.confirm("Are you sure you want to delete this expense?");
+    if (!confirmed) return;
+
+    const res = await fetch(`http://localhost:5000/api/expenses/${expenseid}`, {
+      method: "DELETE",
+      credentials: "include", // Only keep if your backend uses session cookies
+    });
+
+    if (!res.ok) throw new Error("Failed to delete expense");
+
+    // Refresh expense list
+    const updatedExpenses = await fetch("http://localhost:5000/api/expenses", {
+      credentials: "include",
+    }).then(res => res.json());
+
+    const sorted = updatedExpenses.sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+
+    setExpenses(sorted); // or whatever your state updater is called
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
   return (
     <div className="App">
       <h1>{editingId ? 'Edit Expense' : 'Expense Tracker - Phase 2'}</h1>
@@ -68,6 +95,7 @@ function App() {
           <ExpenseList
             initialExpenses={expenses}
             setEditingId={setEditingId}
+            onDelete={handleDeleteClick}
           />
         </>
       )}

@@ -7,8 +7,11 @@ import pg from "pg";
 
 const app = express();
 const port = 5000;
-
-app.use(cors());
+// Allow credentials and requests from React frontend
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(bodyParser.json());
 
 const db = new pg.Client({
@@ -70,6 +73,23 @@ app.put("/api/expenses/:id", async (req, res) => {
     res.json({ success: true, message: "Expense updated" });
   } catch (err) {
     console.error("Error updating expense:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+// delete
+app.delete("/api/expenses/:id", async (req, res) => {
+  const expenseid = req.params.id;
+
+  try {
+    const result = await db.query("DELETE FROM expenses WHERE expenseid = $1", [expenseid]);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ success: false, message: "Expense not found" });
+    }
+
+    res.json({ success: true, message: "Expense deleted" });
+  } catch (err) {
+    console.error("Error deleting expense:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
