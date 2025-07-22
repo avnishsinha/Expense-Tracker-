@@ -1,43 +1,66 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const ExpenseForm = () => {
+const ExpenseForm = ({ existingData, onSubmitExpense, onCancel }) => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [customCategory, setCustomCategory] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
 
+  useEffect(() => {
+    if (existingData) {
+      setAmount(existingData.amount || '');
+      setCategory(existingData.category || '');
+      setDescription(existingData.description || '');
+      setDate(existingData.date_created ? existingData.date_created.slice(0, 10) : ''); 
+      if (existingData.category && !['Food','Travel','Entertainment','Groceries','Deposit'].includes(existingData.category)) {
+        setCategory('Custom');
+        setCustomCategory(existingData.category);
+      } else {
+        setCustomCategory('');
+      }
+    } else {
+      setAmount('');
+      setCategory('');
+      setCustomCategory('');
+      setDescription('');
+      setDate('');
+    }
+  }, [existingData]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const finalCategory = category === 'Custom' ? customCategory : category;
+    const finalCategory = category === 'Custom' ? customCategory.trim() : category;
 
     if (!amount || !finalCategory || !date) {
-      alert("Please fill out Amount, Category, and Date.");
+      alert('Please fill out Amount, Category, and Date.');
       return;
     }
 
     const expenseData = {
       amount,
-      category,
+      category: finalCategory,
       description,
-      date
+      date_created: date,
     };
 
-    console.log("Expense Submitted:", expenseData);
+    onSubmitExpense(expenseData);
 
-    setAmount('');
-    setCategory('');
-    setCustomCategory('');
-    setDescription('');
-    setDate('');
+    if (!existingData) {
+      setAmount('');
+      setCategory('');
+      setCustomCategory('');
+      setDescription('');
+      setDate('');
+    }
   };
 
   return (
     <div className="form-wrapper">
       <form className="expense-form" onSubmit={handleSubmit}>
-        <h2 className="form-title">Add New Expense:</h2>
+        <h2 className="form-title">{existingData ? 'Edit Expense' : 'Add New Expense'}</h2>
 
         <div className="form-group">
           <label>💰 Amount ($)</label>
@@ -96,7 +119,20 @@ const ExpenseForm = () => {
           />
         </div>
 
-        <button className="submit-btn" type="submit">Submit Expense</button>
+        <div className="form-buttons">
+          <button className="submit-btn" type="submit">
+            {existingData ? 'Update Expense' : 'Add Expense'}
+          </button>
+          {existingData && (
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={onCancel}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );

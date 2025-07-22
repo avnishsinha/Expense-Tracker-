@@ -1,92 +1,129 @@
-import TestData from './testData';
 import { useState } from 'react';
 import './expenseCard.css';
+import SpendingPieChart from './PieChart';
 
-// One expense card
-function ExpenseCard({ amount, category, description, date }) {
+// Single expense card component
+function ExpenseCard({ id, amount, category, description, date, onEdit, onDelete }) {
   return (
     <div className="expenseCard">
       <div className="left">
         <div className="top">
-          <p>{new Date(date).toLocaleDateString()}</p> 
+          <p>
+            {date
+              ? new Date(date).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })
+              : 'No Date'}
+          </p>
           <p>{category}</p>
         </div>
         <p>{description}</p>
       </div>
       <div className="right">
-        <p style={{ 
-          color: category === 'Deposit' 
-          ? '#28a745' 
-          : '#e50000' }}>
+        <p style={{ color: category === 'Deposit' ? '#28a745' : '#e50000' }}>
           ${amount}
         </p>
         <div className="bottom">
-          <button id="edit">Edit</button>
-          <button id="delete">Delete</button>
+          <button id="edit" onClick={onEdit}>Edit</button>
+          <button id="delete" onClick={onDelete}>Delete</button>
         </div>
       </div>
     </div>
   );
 }
 
-// List of all expenses
-function ExpenseList() {
+// List of all expenses with filtering and pie chart
+function ExpenseList({ initialExpenses, setEditingId, onDelete }) {
+  const expenses = initialExpenses;
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Months list
-  const currentDate = new Date();
-  const prevMonths = ['All'];
-  for (let i = 0; i < 36; i++) {
-    const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i);
-    const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
-    prevMonths.push(monthYear);
-  }
+  const [months] = useState(() => {
+    const currentDate = new Date();
+    const result = ['All'];
+    for (let i = 0; i < 36; i++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i);
+      const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+      result.push(monthYear);
+    }
+    return result;
+  });
 
-  const [months] = useState(prevMonths);
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
   const selectedMonth = months[currentMonthIndex];
 
-  // Navigate months
   const goToPrevMonth = () => {
     if (currentMonthIndex < months.length - 1) {
       setCurrentMonthIndex(currentMonthIndex + 1);
     }
   };
+
   const goToNextMonth = () => {
     if (currentMonthIndex > 0) {
       setCurrentMonthIndex(currentMonthIndex - 1);
     }
   };
 
-  // Filter data by selected category and month
-  const filteredData = TestData.filter(item => {
-    const itemDate = new Date(item.date);
-    const itemMonthYear = itemDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+  const filteredExpenses = expenses.filter((expense) => {
+    const expenseDate = new Date(expense.date_created || expense.date);
+    const expenseMonthYear = expenseDate.toLocaleString('default', {
+      month: 'long',
+      year: 'numeric',
+    });
 
-    const matchesMonth = selectedMonth === 'All' || itemMonthYear === selectedMonth;
-    const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
+    const matchMonth = selectedMonth === 'All' || selectedMonth === expenseMonthYear;
+    const matchCategory = selectedCategory === 'All' || selectedCategory === expense.category;
 
-    return matchesMonth && matchesCategory;
+    return matchMonth && matchCategory;
   });
 
-  // Dynamic categories from current filtered data
-  const categories = ['All', ...new Set(TestData.map(item => item.category))];
+  const categories = ['All', ...new Set(expenses.map((e) => e.category))];
 
-  // Calculate balance based on full TestData (not filtered)
-  const balance = filteredData.reduce((sum, item) => {
+  const balance = filteredExpenses.reduce((total, item) => {
     return item.category === 'Deposit'
-      ? sum + parseFloat(item.amount)
-      : sum - parseFloat(item.amount);
+      ? total + parseFloat(item.amount)
+      : total - parseFloat(item.amount);
   }, 0);
 
+  const chartData = filteredExpenses.reduce((acc, item) => {
+    const entry = acc.find((e) => e.category === item.category);
+    const amount = parseFloat(item.amount);
+    if (entry) {
+      entry.amount += amount;
+    } else {
+      acc.push({ category: item.category, amount });
+    }
+    return acc;
+  }, []);
 
   return (
     <div className="body">
       <div className="leftExpenseList">
         <div className="month">
-          <button id="prevMonth" onClick={goToPrevMonth} disabled={currentMonthIndex >= months.length - 1}>&lt;</button>
+          <button
+            id="prevMonth"
+            onClick={goToPrevMonth}
+            disabled={currentMonthIndex >= months.length - 1}
+          >
+            &lt;
+          </button>
           <p>{selectedMonth}</p>
-          <button id="nextMonth" onClick={goToNextMonth} disabled={currentMonthIndex <= 0}>&gt;</button>
+          <button
+            id="nextMonth"
+            onClick={goToNextMonth}
+            disabled={currentMonthIndex <= 0}
+          >
+            &gt;
+          </button>
+        </div>
+
+        <div className="piechart">
+          {chartData.length > 0 ? (
+            <SpendingPieChart data={chartData} />
+          ) : (
+            <p style={{ textAlign: 'center' }}>No expense data to display yet.</p>
+          )}
         </div>
       </div>
 
@@ -102,7 +139,7 @@ function ExpenseList() {
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <option key={cat} value={cat}>
                 {cat}
               </option>
@@ -111,13 +148,16 @@ function ExpenseList() {
         </div>
 
         <dl>
-          {filteredData.map(({ id, amount, category, date, description }) => (
+          {filteredExpenses.map((item) => (
             <ExpenseCard
-              key={id}
-              amount={amount}
-              category={category}
-              date={date}
-              description={description}
+              key={item.expenseid}
+              id={item.expenseid}
+              amount={item.amount}
+              category={item.category}
+              description={item.description}
+              date={item.date_created || item.date}
+              onEdit={() => setEditingId(item.expenseid)}
+              onDelete={() => onDelete(item.expenseid)}
             />
           ))}
         </dl>
@@ -125,7 +165,6 @@ function ExpenseList() {
     </div>
   );
 }
-
 
 export default ExpenseCard;
 export { ExpenseList };
