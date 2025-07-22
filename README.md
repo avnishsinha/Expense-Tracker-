@@ -1,52 +1,66 @@
-# 💸 Expense Tracker - Phase 1 (Frontend)
+# 💸 Expense Tracker - Phase 2 (Fullstack)
 
-A stylish and simple Expense Tracker web app built with **React.js** as part of the CS-312 group project. This version focuses on **Phase-1 deliverables**, showcasing the frontend UI using **mock data** only — no backend or database yet.
+A stylish and modern Expense Tracker web app built with **React.js** (frontend) and **Express.js** (backend). Now featuring a fully functional backend, real-time charts, and a beautiful, responsive UI.
 
 ---
 
 ## 🚀 Tech Stack
 
 - ⚛️ React.js (Frontend UI)
-- 🎨 CSS3 (Custom styling)
+- 🎨 CSS3 (Custom styling, modernized with Google Fonts and gradients)
 - 📦 JavaScript (ES6+)
-- 🧪 Mock Data (No backend in Phase-1)
+- 🟦 Express.js (Backend API)
+- 🗄 PostgreSQL (Database)
+- 📊 Recharts (Pie chart visualization)
+- 🖋 Google Fonts (Inter, Roboto)
 
 ---
 
 ## 📦 Folder Structure
 
 ```
-expense-tracker-client/
+Expense-Tracker--SagePC/
 ├── public/
 │   └── index.html
 ├── src/
 │   ├── App.js
 │   ├── App.css
-│   └── expenseForm.js
-├── .gitignore
+│   ├── expenseCard.js
+│   ├── expenseCard.css
+│   ├── expenseForm.js
+│   ├── expenseForm.css
+│   ├── PieChart.jsx
+│   └── ...
+├── server/
+│   ├── server.js
+│   └── ...
 ├── package.json
 └── README.md
 ```
 
 ---
 
-## ✨ Features Implemented (Phase-1)
+## ✨ Features Implemented (Phase-2)
 
-- ✅ Expense Input Form  
-- ✅ Controlled form inputs using `useState`
-- ✅ Category dropdown (predefined)
-- ✅ Optional description field
-- ✅ Date picker
-- ✅ Form validation + Console output on submit
-- ✅ Clean responsive design
+- ✅ Modern, aesthetic UI with soft color palette, gradients, and card layouts
+- ✅ Google Fonts (Inter, Roboto) for a clean, modern look
+- ✅ Responsive design with improved spacing and structure
+- ✅ Stylish header and footer for app structure
+- ✅ Expense Input Form with validation and category selection
+- ✅ Expense List with card layout, edit/delete, and filtering
+- ✅ Real-time Pie Chart visualization by category
+- ✅ Backend integration (Express.js API)
+- ✅ Persistent data storage (PostgreSQL)
+- ✅ Monthly and category-based filtering
+- ✅ Clean, accessible button and input styles
 
 ---
 
 ## 📸 Screenshots
 
-| Form View | Filled Sample |
-|-----------|---------------|
-| ![Form UI](https://via.placeholder.com/300x200?text=Form+View) | ![Filled Form](https://via.placeholder.com/300x200?text=Filled+Form) |
+| Home View | Pie Chart | Expense Card |
+|-----------|-----------|-------------|
+| ![Home UI](https://via.placeholder.com/300x200?text=Home+View) | ![Pie Chart](https://via.placeholder.com/300x200?text=Pie+Chart) | ![Expense Card](https://via.placeholder.com/300x200?text=Expense+Card) |
 
 *(Replace with actual screenshots before submission)*
 
@@ -56,13 +70,21 @@ expense-tracker-client/
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-username/expense-tracker-client.git
-cd expense-tracker-client
+git clone https://github.com/your-username/Expense-Tracker--SagePC.git
+cd Expense-Tracker--SagePC
 
-# 2. Install dependencies
+# 2. Install frontend dependencies
 npm install
 
-# 3. Start the development server
+# 3. Install backend dependencies
+cd server
+npm install
+
+# 4. Start the backend server
+node server.js
+
+# 5. In a new terminal, start the frontend
+cd ..
 npm start
 ```
 
@@ -70,62 +92,12 @@ Then open [http://localhost:3000](http://localhost:3000) to view it in your brow
 
 ---
 
-### 🧠 Contributions
+## 🛠 Future Plans
 
-#### 👨‍💻 Avnish Kumar Sinha – Expense Input Form
-
-* Developed the **Expense Input Form** component using React
-* Managed form inputs using `useState` (amount, category, description, date)
-* Handled form submission and validation
-* Logged expense data as mock output to the console
-* Designed a clean, responsive layout for the form using custom CSS
-
-#### 🧑‍💻 Luke Bowen – Category Manager System
-
-* Created the **Category Selector & Manager** UI component
-* Implemented predefined category dropdown (Food, Travel, Entertainment, etc.)
-* Added support for custom category input using local state
-* Ensured category updates dynamically in the interface
-* Styled the dropdown and input field for usability
-
-#### 👩‍💻 Sage Tesoro – Expense Display View
-
-* Designed the **Expense List Display** using mock JSON data
-* Developed a card/list view to show expenses with fields (amount, date, category, description)
-* Added UI buttons for Edit/Delete (non-functional in Phase-1)
-* Implemented filtering by category using dropdown
-* Applied consistent styling for expense items and layout
-
----
-
-## 🛠 Future Plans (Phase-2)
-
-- 🔌 Backend Integration (PostgreSQL, Express.js)
-- 📈 Real-time charts and monthly breakdowns
-- 📊 Data analytics by category
-- 🧾 Filtered views & summary reports
-
----
-
-## 🗃 GitHub Repository Naming Convention
-
-```bash
-Project_Group_#_Expense_Tracker
-# Example:
-Project_Group_3_Expense_Tracker
-```
-
----
-
-## 📹 Video Presentation Guidelines
-
-✅ All team members visible  
-✅ Max length: **10 mins**  
-✅ Cover:
-- Completed, pending, and modified tasks
-- Screens + functionality demo
-- Code walkthrough (no deep dive)
-- Challenges and solutions faced
+- 🔒 User authentication and accounts
+- 📱 Mobile-first enhancements
+- 📈 More analytics and reporting features
+- 🌙 Dark mode toggle
 
 ---
 
